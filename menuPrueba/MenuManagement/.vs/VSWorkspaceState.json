@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\MenuManagement.Web",
+    "\\MenuManagement.Web\\Controllers",
+    "\\MenuManagement.Web\\Views",
+    "\\MenuManagement.Web\\Views\\Home",
+    "\\MenuManagement.Web\\Views\\Menu",
+    "\\MenuManagement.Web\\Views\\Shared",
+    "\\MenuManagement.Web\\wwwroot",
+    "\\MenuManagement.Web\\wwwroot\\css",
+    "\\MenuManagement.Web\\wwwroot\\js"
+  ],
+  "SelectedNode": "\\MenuManagement.sln",
+  "PreviewInSolutionExplorer": false
+}

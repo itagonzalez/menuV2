@@ -1,0 +1,26 @@
+﻿@model MenuManagement.Web.ViewModels.RoleViewModel
+
+<h1 class="mt-4">Crear Nuevo Rol</h1>
+
+<form asp-action="Create" class="mt-4">
+    <div class="form-group mb-3">
+        <label asp-for="Name" class="form-label">Nombre del Rol*</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="form-label">Descripción</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

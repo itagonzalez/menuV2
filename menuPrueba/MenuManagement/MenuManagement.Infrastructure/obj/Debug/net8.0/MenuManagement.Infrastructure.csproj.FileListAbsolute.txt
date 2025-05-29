@@ -1,0 +1,17 @@
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Infrastructure.deps.json
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Infrastructure.runtimeconfig.json
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Infrastructure.dll
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Infrastructure.pdb
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Domain.dll
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\bin\Debug\net8.0\MenuManagement.Domain.pdb
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.AssemblyInfo.cs
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuMana.C8C2354C.Up2Date
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.dll
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\refint\MenuManagement.Infrastructure.dll
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.pdb
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\MenuManagement.Infrastructure.genruntimeconfig.cache
+C:\Users\talog\OneDrive\Documentos\GitHub\menuPrueba\MenuManagement\MenuManagement.Infrastructure\obj\Debug\net8.0\ref\MenuManagement.Infrastructure.dll

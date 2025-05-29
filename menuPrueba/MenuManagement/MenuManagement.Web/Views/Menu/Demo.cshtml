@@ -1,0 +1,337 @@
+﻿@model IEnumerable<MenuManagement.Domain.Entities.Role>
+
+@{
+    ViewData["Title"] = "Demo - Menú Dinámico";
+    ViewData["Breadcrumb"] = "<li class='breadcrumb-item'><a href='/'>Inicio</a></li><li class='breadcrumb-item active'>Demo Menú</li>";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-eye me-2"></i>
+                        Demostración de Menú Dinámico por Rol
+                    </h4>
+                    <small class="text-white-50">Seleccione un rol para ver el menú correspondiente</small>
+                </div>
+                <div class="card-body">
+
+                    <!-- Role Selector -->
+                    <div class="role-selector">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <label for="roleSelect" class="form-label">
+                                    <i class="fas fa-user-tag me-2"></i>
+                                    Seleccionar Rol:
+                                </label>
+                                <select id="roleSelect" class="form-select form-select-lg">
+                                    <option value="">-- Seleccione un rol --</option>
+                                    @foreach (var role in Model)
+                                    {
+                                        <option value="@role.Id">@role.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <div class="d-inline-block p-3 bg-light rounded">
+                                        <i class="fas fa-info-circle text-primary me-2"></i>
+                                        <strong>Rol Actual:</strong>
+                                        <span id="currentRoleName" class="text-muted">Ninguno seleccionado</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Menu Container -->
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-sitemap me-2"></i>
+                                        Menú Dinámico
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dynamicMenuContainer" class="dynamic-menu p-3">
+                                        <div class="text-center text-muted p-5">
+                                            <i class="fas fa-mouse-pointer fa-3x mb-3"></i>
+                                            <h5>Seleccione un rol para ver el menú</h5>
+                                            <p>El menú se actualizará automáticamente según los permisos del rol seleccionado</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Menu Info Panel -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-chart-bar me-2"></i>
+                                        Estadísticas del Menú
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Total de elementos:</span>
+                                            <span id="totalMenuItems" class="badge bg-primary">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Con enlaces:</span>
+                                            <span id="itemsWithLinks" class="badge bg-success">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Solo texto:</span>
+                                            <span id="itemsWithoutLinks" class="badge bg-secondary">0</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <small class="text-muted">
+                                        <i class="fas fa-lightbulb me-1"></i>
+                                        Los elementos con enlaces son clicables y respetan la configuración de apertura (misma pestaña o nueva)
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="card mt-3">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-tools me-2"></i>
+                                        Acciones Rápidas
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="/Menu" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-edit me-2"></i>
+                                            Gestionar Menús
+                                        </a>
+                                        <a href="/Roles" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-users me-2"></i>
+                                            Gestionar Roles
+                                        </a>
+                                        <a href="/Permissions" class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-shield-alt me-2"></i>
+                                            Asignar Permisos
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Menu Test Area -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-secondary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-vial me-2"></i>
+                                        Área de Pruebas de Enlaces
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="linkTestArea">
+                                        <p class="text-muted">Haga clic en los elementos del menú con enlaces para probar su funcionamiento.</p>
+                                        <div id="lastClickedInfo" class="alert alert-info d-none">
+                                            <i class="fas fa-mouse-pointer me-2"></i>
+                                            <strong>Último elemento clickeado:</strong>
+                                            <span id="lastClickedDetails"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle role selection change
+            $('#roleSelect').on('change', function() {
+                const roleId = $(this).val();
+                const roleName = $(this).find('option:selected').text();
+
+                // Update current role display
+                if (roleId) {
+                    $('#currentRoleName').text(roleName).removeClass('text-muted').addClass('text-primary fw-bold');
+                    loadMenuForRole(roleId);
+                } else {
+                    $('#currentRoleName').text('Ninguno seleccionado').removeClass('text-primary fw-bold').addClass('text-muted');
+                    resetMenuContainer();
+                }
+            });
+
+            // Load menu for selected role
+            function loadMenuForRole(roleId) {
+                Utils.showLoading();
+
+                $.ajax({
+                    url: '/Menu/GetMenuForRole/' + roleId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        renderDynamicMenu(data);
+                        updateMenuStats(data);
+                        Utils.hideLoading();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading menu:', error);
+                        $('#dynamicMenuContainer').html(`
+                            <div class="text-center text-danger p-4">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                                <h6>Error al cargar el menú</h6>
+                                <p>Por favor, intente nuevamente</p>
+                            </div>
+                        `);
+                        Utils.hideLoading();
+                    }
+                });
+            }
+
+            // Render dynamic menu
+            function renderDynamicMenu(menuItems) {
+                if (!menuItems || menuItems.length === 0) {
+                    $('#dynamicMenuContainer').html(`
+                        <div class="text-center text-warning p-4">
+                            <i class="fas fa-ban fa-2x mb-3"></i>
+                            <h6>Sin acceso</h6>
+                            <p>Este rol no tiene permisos para ningún elemento del menú</p>
+                        </div>
+                    `);
+                    return;
+                }
+
+                let html = '<nav class="nav flex-column">';
+                html += renderMenuLevel(menuItems, 0);
+                html += '</nav>';
+
+                $('#dynamicMenuContainer').html(html);
+
+                // Add click handlers for menu items
+                $('.dynamic-menu-item').on('click', function(e) {
+                    e.preventDefault();
+                    const link = $(this).data('link');
+                    const target = $(this).data('target');
+                    const name = $(this).data('name');
+
+                    // Show last clicked info
+                    $('#lastClickedDetails').html(`
+                        <strong>${name}</strong><br>
+                        <small>Enlace: ${link || 'No disponible'}</small><br>
+                        <small>Modo: ${target === '_blank' ? 'Nueva pestaña' : 'Misma pestaña'}</small>
+                    `);
+                    $('#lastClickedInfo').removeClass('d-none');
+
+                    // Open link if available
+                    if (link) {
+                        if (target === '_blank') {
+                            window.open(link, '_blank');
+                        } else {
+                            window.location.href = link;
+                        }
+                    } else {
+                        Utils.showSuccess(`Elemento "${name}" clickeado (sin enlace configurado)`);
+                    }
+                });
+            }
+
+            // Render menu level recursively
+            function renderMenuLevel(items, level) {
+                let html = '';
+                const indent = level * 20;
+
+                items.forEach(function(item) {
+                    const hasLink = item.link && item.link.trim() !== '';
+                    const target = item.openMode === 'nueva_pestana' ? '_blank' : '_self';
+
+                    html += `
+                        <a href="#"
+                           class="nav-link dynamic-menu-item ${hasLink ? 'text-primary' : 'text-dark'} d-flex align-items-center"
+                           style="padding-left: ${20 + indent}px; margin: 2px 0;"
+                           data-link="${item.link || ''}"
+                           data-target="${target}"
+                           data-name="${item.name}">
+
+                            ${level > 0 ? '<i class="fas fa-angle-right me-2 text-muted"></i>' : ''}
+                            ${hasLink ? '<i class="fas fa-external-link-alt me-2"></i>' : '<i class="fas fa-folder me-2"></i>'}
+
+                            <span class="flex-grow-1">${item.name}</span>
+
+                            ${hasLink ? '<small class="text-muted ms-2">[Link]</small>' : ''}
+
+                            <small class="badge bg-light text-dark ms-2">${item.order}</small>
+                        </a>
+                    `;
+
+                    // Render children if any
+                    if (item.children && item.children.length > 0) {
+                        html += renderMenuLevel(item.children, level + 1);
+                    }
+                });
+
+                return html;
+            }
+
+            // Update menu statistics
+            function updateMenuStats(menuItems) {
+                let totalItems = 0;
+                let itemsWithLinks = 0;
+                let itemsWithoutLinks = 0;
+
+                function countItems(items) {
+                    items.forEach(function(item) {
+                        totalItems++;
+                        if (item.link && item.link.trim() !== '') {
+                            itemsWithLinks++;
+                        } else {
+                            itemsWithoutLinks++;
+                        }
+
+                        if (item.children && item.children.length > 0) {
+                            countItems(item.children);
+                        }
+                    });
+                }
+
+                countItems(menuItems);
+
+                $('#totalMenuItems').text(totalItems);
+                $('#itemsWithLinks').text(itemsWithLinks);
+                $('#itemsWithoutLinks').text(itemsWithoutLinks);
+            }
+
+            // Reset menu container
+            function resetMenuContainer() {
+                $('#dynamicMenuContainer').html(`
+                    <div class="text-center text-muted p-5">
+                        <i class="fas fa-mouse-pointer fa-3x mb-3"></i>
+                        <h5>Seleccione un rol para ver el menú</h5>
+                        <p>El menú se actualizará automáticamente según los permisos del rol seleccionado</p>
+                    </div>
+                `);
+
+                $('#totalMenuItems, #itemsWithLinks, #itemsWithoutLinks').text('0');
+                $('#lastClickedInfo').addClass('d-none');
+            }
+        });
+    </script>
+}

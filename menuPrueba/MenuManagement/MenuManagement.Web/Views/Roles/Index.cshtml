@@ -1,0 +1,28 @@
+﻿@model IEnumerable<MenuManagement.Domain.Entities.Role>
+
+<h1 class="mt-4">Roles del Sistema</h1>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>@role.Description</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@role.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Crear Nuevo Rol</a>

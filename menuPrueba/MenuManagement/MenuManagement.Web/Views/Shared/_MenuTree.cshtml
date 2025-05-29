@@ -1,0 +1,283 @@
+﻿@model IEnumerable<MenuManagement.Domain.Entities.MenuItem>
+
+@{
+    var level = ViewBag.Level ?? 0;
+    var maxLevel = ViewBag.MaxLevel ?? 5; // Máximo 5 niveles de profundidad
+}
+
+@if (Model != null && Model.Any())
+{
+    <ul class="nested-menu list-unstyled @(level == 0 ? "menu-root" : "")">
+        @foreach (var item in Model.OrderBy(x => x.Order))
+        {
+            <li class="menu-tree-item mb-2" data-id="@item.Id" data-level="@level">
+                <div class="menu-item menu-level-@level d-flex justify-content-between align-items-start p-3">
+                    <div class="menu-content flex-grow-1">
+                        <div class="d-flex align-items-center mb-2">
+                            @if (level > 0)
+                            {
+                                <i class="fas fa-arrow-right text-muted me-2"></i>
+                            }
+                            <h6 class="mb-0 fw-bold text-primary">
+                                <i class="fas fa-@(level == 0 ? "folder" : "file-alt") me-1"></i>
+                                @item.Name
+                            </h6>
+                            <span class="badge bg-secondary ms-2">Orden: @item.Order</span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(item.Link))
+                        {
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-link me-1"></i>
+                                    <a href="@item.Link" target="@(item.OpenInNewTab ? "_blank" : "_self")"
+                                       class="text-decoration-none">
+                                        @item.Link
+                                        @if (item.OpenInNewTab)
+                                        {
+                                            <i class="fas fa-external-link-alt ms-1"></i>
+                                        }
+                                    </a>
+                                </small>
+                            </div>
+                        }
+
+                        <div class="menu-meta">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                Creado: @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                            @if (item.UpdatedAt.HasValue)
+                            {
+                                <small class="text-muted ms-3">
+                                    <i class="fas fa-edit me-1"></i>
+                                    Modificado: @item.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                </small>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="menu-actions">
+                        <div class="btn-group-vertical btn-group-sm" role="group">
+                            <a href="@Url.Action("Edit", "Menu", new { id = item.Id })"
+                               class="btn btn-outline-primary btn-sm"
+                               title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
+                            @if (level < maxLevel)
+                            {
+                                <a href="@Url.Action("Create", "Menu", new { parentId = item.Id })"
+                                   class="btn btn-outline-success btn-sm"
+                                   title="Agregar hijo">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            }
+
+                            <button type="button"
+                                    class="btn btn-outline-danger btn-sm"
+                                    onclick="confirmDelete(@item.Id, '@Html.Raw(Html.Encode(item.Name))')"
+                                    title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+
+                            @if (item.Children != null && item.Children.Any())
+                            {
+                                <button type="button"
+                                        class="btn btn-outline-info btn-sm toggle-children"
+                                        data-target="#children-@item.Id"
+                                        title="Mostrar/Ocultar hijos">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @* Renderizar hijos recursivamente *@
+                @if (item.Children != null && item.Children.Any() && level < maxLevel)
+                {
+                    <div id="children-@item.Id" class="children-container ms-3 mt-2">
+                        @{
+                            ViewBag.Level = level + 1;
+                            ViewBag.MaxLevel = maxLevel;
+                        }
+                        @await Html.PartialAsync("_MenuTree", item.Children)
+                    </div>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="empty-menu text-center p-4">
+        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+        <p class="text-muted">
+            @if (level == 0)
+            {
+                <span>No hay elementos de menú creados.</span>
+                <br>
+                <a href="@Url.Action("Create", "Menu")" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus me-1"></i>Crear primer menú
+                </a>
+            }
+            else
+            {
+                <span>No hay submenús en este nivel.</span>
+            }
+        </p>
+    </div>
+}
+
+<script>
+    $(document).ready(function() {
+        // Toggle children visibility
+        $('.toggle-children').click(function() {
+            const target = $(this).data('target');
+            const icon = $(this).find('i');
+
+            $(target).slideToggle(300, function() {
+                if ($(target).is(':visible')) {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+
+        // Add hover effects
+        $('.menu-item').hover(
+            function() {
+                $(this).addClass('shadow-sm');
+            },
+            function() {
+                $(this).removeClass('shadow-sm');
+            }
+        );
+    });
+
+    // Función para confirmar eliminación
+    function confirmDelete(id, name) {
+        Swal.fire({
+            title: '¿Eliminar elemento?',
+            html: `¿Está seguro de eliminar "<strong>${name}</strong>" y todos sus elementos hijos?<br><br><small class="text-danger">Esta acción no se puede deshacer.</small>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-trash me-1"></i>Sí, eliminar',
+            cancelButtonText: '<i class="fas fa-times me-1"></i>Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Mostrar loading
+                Utils.showLoading();
+
+                // Hacer petición AJAX para eliminar
+                $.ajax({
+                    url: '@Url.Action("Delete", "Menu")/' + id,
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        Utils.hideLoading();
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Eliminado',
+                                text: 'El elemento ha sido eliminado correctamente.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Recargar la página o actualizar el árbol
+                                location.reload();
+                            });
+                        } else {
+                            Utils.showError(response.message || 'Error al eliminar el elemento');
+                        }
+                    },
+                    error: function() {
+                        Utils.hideLoading();
+                        Utils.showError('Error de conexión al eliminar el elemento');
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+<style>
+    /* Estilos específicos para el árbol de menús */
+    .menu-tree-item {
+        position: relative;
+    }
+
+        .menu-tree-item::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 0;
+            bottom: 50%;
+            width: 1px;
+            background: #dee2e6;
+        }
+
+        .menu-tree-item::after {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 24px;
+            width: 15px;
+            height: 1px;
+            background: #dee2e6;
+        }
+
+        .menu-tree-item:last-child::before {
+            bottom: auto;
+            height: 24px;
+        }
+
+    .menu-root > .menu-tree-item::before,
+    .menu-root > .menu-tree-item::after {
+        display: none;
+    }
+
+    .menu-level-0 {
+        background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 100%);
+        border-left: 4px solid #007bff;
+    }
+
+    .menu-level-1 {
+        background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+        border-left: 3px solid #28a745;
+    }
+
+    .menu-level-2 {
+        background: linear-gradient(135deg, #fffaf0 0%, #ffeaa7 100%);
+        border-left: 2px solid #ffc107;
+    }
+
+    .menu-level-3 {
+        background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        border-left: 2px solid #dc3545;
+    }
+
+    .menu-level-4 {
+        background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+        border-left: 1px solid #6c757d;
+    }
+
+    .children-container {
+        border-left: 2px dashed #dee2e6;
+        padding-left: 1rem;
+    }
+
+    .empty-menu {
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+    }
+
+  </style>
